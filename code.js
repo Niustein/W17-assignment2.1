@@ -1,6 +1,7 @@
-//
-// this is just a stub for a function you need to implement
-//
+// Samuel Niu
+// Assignment #2 - SENG 513
+// 10047006
+
 function getStats(txt){
     let nChars;
     let nWords;
@@ -16,28 +17,22 @@ function getStats(txt){
     
     let wordsTxt = txt;
     let lines = txt.split("\n");
-    let acceptableChar = /^[0-9a-zA-Z]+$/;
+    let alphaNumeric = /^[a-z0-9]+$/i;
     
     // get nChars
     nChars = txt.length;
     
     // Turn non letter and non number characters into spaces
-    for(let i = 0; i < wordsTxt.length; i++){
-        if(wordsTxt[i].value.match(acceptableChar)){
-            continue;
-        } else {
-            wordsTxt[i] = " ";
-        }
-    }
-    
-    // Use converted words to get number of words
-    nWords = wordsTxt.split().length;
+    wordsTxt = wordsTxt.replace(/[\W_]+/g, " ");
+   
+   
+    nWords = wordsTxt.trim().split(" ").length;
     
     // Get number of lines 
     if(txt === ""){
         nLines = 0;
     } else{
-        nLines = lines.length();
+        nLines = lines.length;
     }
     
     // get number of non empty lines
@@ -62,34 +57,33 @@ function getStats(txt){
     
     // Average Word Length
     let letterCount = 0;
-    let listWords = wordsTxt.split();
+    let listWords = wordsTxt.toLowerCase().split(" ");
     for(let i = 0; i < listWords.length; i++){
         letterCount += listWords[i].length;
     }
     
     averageWordLength = letterCount / nWords;
     
-    // Frequency of Words
-    let lowerListWords = listWords.toLowerCase();
-    for(let x in lowerListWords){
-        if(x in freqDict){
-            freqDict[x] += 1;
-        } else {
-            freqDict[x] = 1;
+    // Populate frequency dictionary
+    for(let x of listWords){
+        if (x != ""){
+            if(x in freqDict){
+                freqDict[x] += 1;
+            } else {
+                freqDict[x] = 1;
+            }
         }
     }
     
     // Palindrome Test 
-    let listWordsOrig = txt.split();
-    for (let x in listWords){
+    for (let x of listWords){
         // Make sure length of word is > 2 letters. 
         if (x.length > 2){
             // Reverse word and check if it's equal to the original word
             let reverseWord = x.split("").reverse().join("");
             if(reverseWord === x){
                 palindromes.push(x);
-            }
-            
+            }   
         }
     }
     
@@ -103,9 +97,21 @@ function getStats(txt){
         sArrayFreq.push([x, freqDict[x]]);
     }
     
-    // Sort the new array in descending order (2)
+    // Sort the new array in descending order, first by frequency, then by alphanumeric  (2)
     sArrayFreq.sort(function(x,y){
-       return y[1]-x[1]; 
+        if (y[1] < x[1]){
+            return -1
+        } else if (y[1] > x[1]){
+            return 1
+        } else{
+            if(y[0] > x[0]){
+                return -1
+            } else if (y[0] < x[0]){
+                return 1
+            } else{
+                return 0
+            }
+        }
     });
     
     // Push the top 10 into mostFrequentWords (3)
@@ -129,10 +135,12 @@ function getStats(txt){
     let sArrayLength = [];
     // 1
     for(let x in listWords){
-        if(x in dCharLength){
-            continue;
-        } else{
-            dCharLength[x] = listWords[x].length;
+        if (listWords[x] != ""){
+            if(listWords[x] in dCharLength){
+                continue;
+            } else {
+                dCharLength[listWords[x]] = listWords[x].length;
+            }
         }
     }
     
@@ -143,7 +151,19 @@ function getStats(txt){
     
     // 3
     sArrayLength.sort(function(x,y){
-        return y[1]-x[1];
+        if (y[1] < x[1]){
+            return -1
+        } else if (y[1] > x[1]){
+            return 1
+        } else{
+            if(y[0] > x[0]){
+                return -1
+            } else if (y[0] < x[0]){
+                return 1
+            } else{
+                return 0
+            }
+        }
     });
     
     // 4
